@@ -22,11 +22,13 @@ class Task(models.Model):
     description = models.TextField()
     date_of_creation = models.DateField(auto_now_add=True)
     date_of_changing = models.DateField(auto_now=True)
-    deadline = models.DateField()
+    deadline = models.DateField(null=True)
     state = models.CharField(choices=States.choices, default=States.NEW_TASK)
     priority = models.IntegerField(choices=Priority.choices, default=Priority.LOW)
     tags = models.ManyToManyField(Tag)
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="author", null=True)
+    author = models.ForeignKey(
+        User, on_delete=models.SET_NULL, related_name="author", null=True
+    )
     assignee = models.ForeignKey(
         User, on_delete=models.SET_NULL, related_name="assignee", null=True
     )
