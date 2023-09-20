@@ -6,38 +6,96 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('main', '0001_initial'),
+        ("main", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Tag',
+            name="Tag",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('header', models.CharField(max_length=30)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("header", models.CharField(max_length=30)),
             ],
         ),
         migrations.AddField(
-            model_name='user',
-            name='role',
-            field=models.CharField(choices=[('developer', 'Developer'), ('manager', 'Manager'), ('admin', 'Admin')], default='developer', max_length=255),
+            model_name="user",
+            name="role",
+            field=models.CharField(
+                choices=[
+                    ("developer", "Developer"),
+                    ("manager", "Manager"),
+                    ("admin", "Admin"),
+                ],
+                default="developer",
+                max_length=255,
+            ),
         ),
         migrations.CreateModel(
-            name='Task',
+            name="Task",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('header', models.CharField(blank=True, max_length=30)),
-                ('description', models.TextField()),
-                ('date_of_creation', models.DateField(auto_now_add=True)),
-                ('date_of_changing', models.DateField(auto_now=True)),
-                ('deadline', models.DateField()),
-                ('state', models.CharField(choices=[('new_task', 'New Task'), ('in_development', 'In Development'), ('in_qa', 'In Qa'), ('in_code_review', 'In Code Review'), ('ready_for_release', 'Ready For Release'), ('released', 'Released'), ('archived', 'Archived')], default='new_task')),
-                ('priority', models.IntegerField(choices=[(1, 'Low'), (2, 'Normal'), (3, 'High')], default=1)),
-                ('assignee', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='assignee', to=settings.AUTH_USER_MODEL)),
-                ('author', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='author', to=settings.AUTH_USER_MODEL)),
-                ('tags', models.ManyToManyField(to='main.tag')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("header", models.CharField(blank=True, max_length=30)),
+                ("description", models.TextField()),
+                ("date_of_creation", models.DateField(auto_now_add=True)),
+                ("date_of_changing", models.DateField(auto_now=True)),
+                ("deadline", models.DateField()),
+                (
+                    "state",
+                    models.CharField(
+                        choices=[
+                            ("new_task", "New Task"),
+                            ("in_development", "In Development"),
+                            ("in_qa", "In Qa"),
+                            ("in_code_review", "In Code Review"),
+                            ("ready_for_release", "Ready For Release"),
+                            ("released", "Released"),
+                            ("archived", "Archived"),
+                        ],
+                        default="new_task",
+                    ),
+                ),
+                (
+                    "priority",
+                    models.IntegerField(
+                        choices=[(1, "Low"), (2, "Normal"), (3, "High")], default=1
+                    ),
+                ),
+                (
+                    "assignee",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="assignee",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "author",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="author",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                ("tags", models.ManyToManyField(to="main.tag")),
             ],
         ),
     ]
