@@ -1,6 +1,7 @@
 import django_filters
 from rest_framework import viewsets
 from .models import User, Tag, Task
+from .permissions import DeleteStaffOnly
 from .serializers import UserSerializer, TaskSerializer, TagSerializer
 
 
@@ -41,8 +42,10 @@ class TaskViewSet(viewsets.ModelViewSet):
     )
     serializer_class = TaskSerializer
     filterset_class = TaskFilter
+    permission_classes = (DeleteStaffOnly,)
 
 
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.order_by("id")
     serializer_class = TagSerializer
+    permission_classes = (DeleteStaffOnly,)
