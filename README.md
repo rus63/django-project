@@ -1,0 +1,1 @@
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2F%2Frus63%2Fdjango-project%2Fbadge%3Fref%3Ddevelop&style=flat)](https://actions-badge.atrox.dev//rus63/django-project/goto?ref=develop)
