@@ -1,3 +1,5 @@
+from rest_framework_simplejwt.tokens import RefreshToken
+
 from main.models import Task, User, Tag
 from tests.base import TestViewSetBase
 
@@ -23,8 +25,9 @@ class TestTagsViewSet(TestViewSetBase):
         }
 
     def test_create(self) -> None:
-        self.client.force_login(self.tag_author)
+        self.set_token(self.tag_author)
 
+        self.client.force_login(self.tag_author)
         self.tag_attr = {**self.test_tag_attributes}
         response_data = self.create(self.tag_attr)
         expected_response = self.expected_details(
@@ -34,6 +37,7 @@ class TestTagsViewSet(TestViewSetBase):
         assert response_data == expected_response
 
     def test_list(self) -> None:
+        self.set_token(self.tag_author)
         self.client.force_login(self.tag_author)
         Tag.objects.create(**self.test_tag_attributes)
         response = self.list()[0]
@@ -42,6 +46,7 @@ class TestTagsViewSet(TestViewSetBase):
         assert response == expected_response
 
     def test_retrieve(self) -> None:
+        self.set_token(self.tag_author)
         self.client.force_login(self.tag_author)
         tag = Tag.objects.create(**self.test_tag_attributes)
         response = self.retrieve(tag.id)
@@ -50,6 +55,7 @@ class TestTagsViewSet(TestViewSetBase):
         assert response == expected_response
 
     def test_delete(self) -> None:
+        self.set_token(self.tag_author)
         self.client.force_login(self.tag_author)
         tag = Tag.objects.create(**self.test_tag_attributes)
 

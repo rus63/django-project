@@ -15,11 +15,13 @@ class TestUserViewSet(TestViewSetBase):
         return {**attributes, "id": entity["id"]}
 
     def test_create(self) -> None:
+        self.set_token(self.user)
         self.client.force_login(self.user)
 
         self.create(self.test_user_attributes)
 
     def test_list(self) -> None:
+        self.set_token(self.user)
         self.client.force_login(self.user)
 
         response = self.list()[0]
@@ -28,6 +30,7 @@ class TestUserViewSet(TestViewSetBase):
         assert response == expected_response
 
     def test_retrieve(self) -> None:
+        self.set_token(self.user)
         self.client.force_login(self.user)
 
         response = self.retrieve(self.user.id)
@@ -36,5 +39,6 @@ class TestUserViewSet(TestViewSetBase):
         assert response == expected_response
 
     def test_delete(self) -> None:
+        self.set_token(self.user)
         self.client.force_login(self.user)
         self.delete(self.user.id)
