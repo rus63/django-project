@@ -18,6 +18,7 @@ class TestViewSetBase(APITestCase):
         "last_name": "Smith",
         "email": "john@test.com",
         "role": "developer",
+        'avatar_picture': None,
         # "is_staff": True
     }
 

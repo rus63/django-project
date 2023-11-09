@@ -6,7 +6,7 @@ import main.services.storage_backends
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("main", "0004_user_date_of_birth_user_phone"),
+        ("main", "0006_alter_task_header"),
     ]
 
     operations = [
