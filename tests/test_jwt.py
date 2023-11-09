@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from django.test.utils import freeze_time
+from freezegun import freeze_time
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
@@ -11,7 +11,7 @@ from tests.factories.user_factory import UserFactory
 class TestJWTAuth(APITestCase):
     token_url = reverse("token_obtain_pair")
     refresh_token_url = reverse("token_refresh")
-    any_api_url = "/api/users"
+    any_api_url = reverse("users-list")
 
     @staticmethod
     def create_user():
@@ -49,7 +49,7 @@ class TestJWTAuth(APITestCase):
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
         response = self.token_request()
-        token = response["access"]
+        token = response.json()["access"]
         client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
         response = client.get(self.any_api_url)
         assert response.status_code == status.HTTP_200_OK

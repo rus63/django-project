@@ -38,6 +38,7 @@ class TestTasksViewSet(TestViewSetBase):
         }
 
     def test_create(self) -> None:
+        self.set_token(self.author)
         self.client.force_login(self.author)
 
         self.task_attr = {
@@ -54,6 +55,7 @@ class TestTasksViewSet(TestViewSetBase):
         assert response_data == expected_response
 
     def test_list(self) -> None:
+        self.set_token(self.author)
         self.client.force_login(self.author)
         Task.objects.create(
             author=self.author,
@@ -66,6 +68,7 @@ class TestTasksViewSet(TestViewSetBase):
         assert response == expected_response
 
     def test_retrieve(self) -> None:
+        self.set_token(self.author)
         self.client.force_login(self.author)
         task = Task.objects.create(
             author=self.author,
@@ -78,6 +81,7 @@ class TestTasksViewSet(TestViewSetBase):
         assert response == expected_response
 
     def test_delete(self) -> None:
+        self.set_token(self.author)
         self.client.force_login(self.author)
         task = Task.objects.create(
             author=self.author,

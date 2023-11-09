@@ -3,6 +3,7 @@ from typing import List, Union, Any, OrderedDict
 
 from django.urls import reverse
 from rest_framework.test import APITestCase, APIClient
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from main.models import User
 
@@ -17,6 +18,7 @@ class TestViewSetBase(APITestCase):
         "last_name": "Smith",
         "email": "john@test.com",
         "role": "developer",
+        'avatar_picture': None,
         # "is_staff": True
     }
 
@@ -25,6 +27,10 @@ class TestViewSetBase(APITestCase):
         super().setUpTestData()
         cls.user = cls.create_api_user()
         cls.client = APIClient()
+
+    def set_token(self, user):
+        refresh = RefreshToken.for_user(user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
 
     @classmethod
     def create_api_user(cls) -> User:
