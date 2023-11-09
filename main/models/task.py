@@ -18,8 +18,8 @@ class Task(models.Model):
         RELEASED = "released"
         ARCHIVED = "archived"
 
-    header = models.CharField(max_length=30, blank=True)
-    description = models.TextField()
+    header = models.CharField(max_length=100, blank=True)
+    description = models.TextField(max_length=300)
     date_of_creation = models.DateField(auto_now_add=True)
     date_of_changing = models.DateField(auto_now=True)
     deadline = models.DateField(null=True)
