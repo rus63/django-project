@@ -6,25 +6,19 @@ from rest_framework.test import APITestCase, APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from main.models import User
+from tests.factories.user_factory import UserFactory
 
 
 class TestViewSetBase(APITestCase):
     user: User = None
     client: APIClient = None
     basename: str
-    user_attributes = {
-        "username": "johnsmith",
-        "first_name": "John",
-        "last_name": "Smith",
-        "email": "john@test.com",
-        "role": "developer",
-        'avatar_picture': None,
-        # "is_staff": True
-    }
+    user_attributes: dict
 
     @classmethod
     def setUpTestData(cls) -> None:
         super().setUpTestData()
+        cls.user_attributes = UserFactory.build()
         cls.user = cls.create_api_user()
         cls.client = APIClient()
 

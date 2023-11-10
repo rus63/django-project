@@ -3,7 +3,7 @@ from unittest.mock import patch, MagicMock
 from django.core import mail
 from django.template.loader import render_to_string
 
-from main.models import Task
+from main.models import Task, User
 from task_manager.services.mail import send_assign_notification
 from tests.base import TestViewSetBase
 from tests.factories.task_factory import TaskFactory
@@ -13,7 +13,8 @@ from tests.factories.user_factory import UserFactory
 class TestSendEmail(TestViewSetBase):
     @patch.object(mail, "send_mail")
     def test_send_assign_notification(self, fake_sender: MagicMock) -> None:
-        assignee = UserFactory.create()
+        assignee_attr = UserFactory.build()
+        assignee = User.objects.create_user(**assignee_attr)
         task = TaskFactory.create(assignee=assignee)
 
         send_assign_notification(task.id)
