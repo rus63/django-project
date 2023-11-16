@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 
+from main.models import User
 from tests.factories.user_factory import UserFactory
 
 
@@ -12,10 +13,11 @@ class TestJWTAuth(APITestCase):
     token_url = reverse("token_obtain_pair")
     refresh_token_url = reverse("token_refresh")
     any_api_url = reverse("users-list")
+    user_attr = UserFactory.build()
 
-    @staticmethod
-    def create_user():
-        return UserFactory.create()
+    @classmethod
+    def create_user(cls):
+        return User.objects.create_user(**cls.user_attr)
 
     def token_request(self, username: str = None, password: str = "password"):
         client = self.client_class()
@@ -31,7 +33,7 @@ class TestJWTAuth(APITestCase):
 
     def get_refresh_token(self):
         response = self.token_request()
-        return response.json()["refresh"]
+        return response.data["refresh"]
 
     def test_successful_auth(self):
         response = self.token_request()

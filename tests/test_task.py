@@ -1,5 +1,7 @@
 from datetime import date
 
+import factory
+
 from main.models import Task, User, Tag
 from tests.base import TestViewSetBase
 
