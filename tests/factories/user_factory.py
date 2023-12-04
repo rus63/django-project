@@ -6,6 +6,7 @@ from tests.factories.base import ImageFileProvider
 
 Faker.add_provider(ImageFileProvider)
 
+
 class UserFactory(DjangoModelFactory):
     username = Faker("user_name")
     password = "password"

@@ -9,12 +9,29 @@ from rest_framework_simplejwt.views import (
 
 
 from main.admin import task_manager_admin_site
-from main.views import UserViewSet, TaskViewSet, TagViewSet
+from main.services.single_resource import BulkRouter
+from main.views import UserViewSet, TaskViewSet, TagViewSet, CurrentUserViewSet, UserTasksViewSet, TaskTagsViewSet
 
-router = routers.SimpleRouter()
-router.register(r"users", UserViewSet, basename="users")
-router.register(r"tasks", TaskViewSet, basename="tasks")
+router = BulkRouter()
 router.register(r"tags", TagViewSet, basename="tags")
+router.register(r"current-user", CurrentUserViewSet, basename="current_user")
+users = router.register(r"users", UserViewSet, basename="users")
+
+users.register(
+    r"tasks",
+    UserTasksViewSet,
+    basename="user_tasks",
+    parents_query_lookups=["assignee_id"],
+)
+
+tasks = router.register(r"tasks", TaskViewSet, basename="tasks")
+tasks.register(
+    r"tags",
+    TaskTagsViewSet,
+    basename="task_tags",
+    parents_query_lookups=["task_id"],
+)
+
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -25,7 +42,6 @@ schema_view = get_schema_view(
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
-
 
 urlpatterns = [
     path("admin/", task_manager_admin_site.urls),

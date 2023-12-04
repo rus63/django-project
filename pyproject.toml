@@ -20,6 +20,7 @@ django-storages = "^1.14.2"
 boto3 = "^1.28.75"
 Pillow = "^10.1.0"
 factory-boy = "^3.3.0"
+drf-extensions = "^0.7.1"
 
 [tool.poetry.dev-dependencies]
 

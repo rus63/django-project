@@ -1,12 +1,12 @@
 from django.core import mail
 from django.template.loader import render_to_string
 
-from main.models import Task
+from main.models import Task, User
 
 
 def send_assign_notification(task_id: int) -> None:
     task = Task.objects.get(pk=task_id)
-    assignee = task.assignee
+    assignee = User.objects.get(pk=task.assignee.id)
     send_html_email(
         subject="You've assigned a task.",
         template="notification.html",
