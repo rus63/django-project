@@ -101,6 +101,9 @@ REST_FRAMEWORK = {
     ),
 }
 
+CELERY_BROKER_URL = f"redis://{os.environ['REDIS_HOST']}:{os.environ['REDIS_PORT']}/0"
+CELERY_INCLUDE = ["task_manager.tasks"]
+
 ROOT_URLCONF = "task_manager.urls"
 
 SETTINGS_PATH = os.path.dirname(os.path.dirname(__file__))

@@ -1,12 +1,13 @@
-from django.core import mail
 from django.template.loader import render_to_string
+from django.core import mail
+from main.models import Task, User
+from task_manager.celery import app
 
-from main.models import Task
 
-
+@app.task
 def send_assign_notification(task_id: int) -> None:
     task = Task.objects.get(pk=task_id)
-    assignee = task.assignee
+    assignee = User.objects.get(pk=task.assignee.id)
     send_html_email(
         subject="You've assigned a task.",
         template="notification.html",
@@ -15,6 +16,7 @@ def send_assign_notification(task_id: int) -> None:
     )
 
 
+@app.task
 def send_html_email(
     subject: str, template: str, context: dict, recipients: list[str]
 ) -> None:
