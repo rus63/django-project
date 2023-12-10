@@ -2,28 +2,27 @@ from unittest.mock import patch, MagicMock
 
 from django.core import mail
 from django.template.loader import render_to_string
+from django.test import override_settings
 
 from main.models import Task, User
-from task_manager.services.mail import send_assign_notification
+from task_manager.tasks import send_assign_notification
 from tests.base import TestViewSetBase
 from tests.factories.task_factory import TaskFactory
 from tests.factories.user_factory import UserFactory
 
 
+@override_settings(CELERY_TASK_ALWAYS_EAGER=True)
 class TestSendEmail(TestViewSetBase):
 
     @patch.object(mail, "send_mail")
     def test_send_assign_notification(self, fake_sender: MagicMock) -> None:
-        # assignee_attr = UserFactory.build()
-        # assignee = User.objects.create_user(**assignee_attr)
         assignee = self.action_client.create_user()
         author = self.action_client.create_user()
 
         tag = self.action_client.create_tag(header="Some tag")
         task = self.action_client.create_task(assignee=assignee["id"], author=author["id"], tags=[tag["id"],])
 
-        # t = Task.objects.get(pk=tas)
-        send_assign_notification(task["id"])
+        send_assign_notification.delay(task["id"])
 
         fake_sender.assert_called_once_with(
             subject="You've assigned a task.",
