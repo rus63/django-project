@@ -1,3 +1,5 @@
+from typing import Any
+
 from django.core.files import File
 from django.core.validators import FileExtensionValidator
 from rest_framework.exceptions import ValidationError
@@ -5,6 +7,8 @@ from rest_framework.exceptions import ValidationError
 from task_manager import settings
 from .models import User, Task, Tag
 from rest_framework import serializers
+from celery.result import AsyncResult
+from task_manager.tasks import countdown
 
 
 class FileMaxSizeValidator:
@@ -60,3 +64,34 @@ class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = ("id", "header")
+
+
+class RepresentationSerializer(serializers.Serializer):
+    def update(self, instance: Any, validated_data: dict) -> Any:
+        pass
+
+    def create(self, validated_data: dict) -> Any:
+        pass
+
+
+class CountdownJobSerializer(RepresentationSerializer):
+    seconds = serializers.IntegerField(write_only=True)
+
+    task_id = serializers.CharField(read_only=True)
+    status = serializers.CharField(read_only=True)
+
+    def create(self, validated_data: dict) -> AsyncResult:
+        return countdown.delay(**validated_data)
+
+
+class ErrorSerializer(RepresentationSerializer):
+    non_field_errors: serializers.ListSerializer = serializers.ListSerializer(
+        child=serializers.CharField()
+    )
+
+
+class JobSerializer(RepresentationSerializer):
+    task_id = serializers.CharField(read_only=True)
+    status = serializers.CharField(read_only=True)
+    errors = ErrorSerializer(read_only=True, required=False)
+    result = serializers.CharField(required=False)
