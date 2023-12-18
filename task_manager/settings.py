@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "task_manager.log_utils.LoggingMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -187,3 +188,29 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "main.User"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "task_manager": {
+            "()": "task_manager.log_utils.RequestFormatter",
+            "format": (
+                "{asctime} {levelname} method={request.method} path={request.path_info} "
+                "view={view.__qualname__} user={user_id} remote={remote_addr} {message} "
+                "request_time={request_time:.3f}s"
+            ),
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "level": "DEBUG",
+            "formatter": "task_manager",
+            "class": "logging.StreamHandler",
+        }
+    },
+    "loggers": {
+        "django.server": {"level": "INFO", "handlers": ["console"]},
+    }
+}
