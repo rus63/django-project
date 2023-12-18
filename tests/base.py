@@ -46,9 +46,11 @@ class TestViewSetBase(APITestCase):
     def list_url(cls, args: List[Union[str, int]] = None) -> str:
         return reverse(f"{cls.basename}-list", args=args)
 
-    def create(self, data: dict, args: List[Union[str, int]] = None) -> dict:
-        response = self.client.post(self.list_url(args), data=data)
-        # print(response.status_code)
+    def request_create(self, data: dict, args: List[Union[str, int]] = None) -> Response:
+        return self.client.post(self.list_url(args), data=data)
+
+    def create(self, data):
+        response = self.request_create(data)
         assert response.status_code == HTTPStatus.CREATED, response.content
         return response.data
 

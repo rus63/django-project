@@ -10,7 +10,8 @@ from rest_framework_simplejwt.views import (
 
 from main.admin import task_manager_admin_site
 from main.services.single_resource import BulkRouter
-from main.views import UserViewSet, TaskViewSet, TagViewSet, CurrentUserViewSet, UserTasksViewSet, TaskTagsViewSet
+from main.views import UserViewSet, TaskViewSet, TagViewSet, CountdownJobViewSet, CurrentUserViewSet, UserTasksViewSet, \
+    TaskTagsViewSet, AsyncJobViewSet
 
 router = BulkRouter()
 router.register(r"tags", TagViewSet, basename="tags")
@@ -31,6 +32,9 @@ tasks.register(
     basename="task_tags",
     parents_query_lookups=["task_id"],
 )
+router.register(r"countdown", CountdownJobViewSet, basename="countdown")
+router.register(r"jobs", AsyncJobViewSet, basename="jobs")
+
 
 
 schema_view = get_schema_view(
